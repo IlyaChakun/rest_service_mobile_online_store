@@ -1,0 +1,59 @@
+buildscript {
+
+    ext {
+        springBootVersion = '2.2.4.RELEASE'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    }
+}
+
+plugins {
+    id "org.sonarqube" version "2.7"
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'by.bsuir'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = 1.9
+    targetCompatibility = 1.9
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile('org.springframework.boot:spring-boot-starter-test:2.0.4.RELEASE')
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        implementation('org.springframework.boot:spring-boot-starter-web:2.0.4.RELEASE')
+        implementation("org.apache.commons:commons-dbcp2:2.7.0")
+        compile group: 'log4j', name: 'log4j', version: '1.2.17'
+        compile group: 'com.github.javafaker', name: 'javafaker', version: '0.15'
+    }
+
+}
+
+dependencies {
+    implementation project(":web")
+    testCompile("junit:junit")
+    implementation 'org.junit.jupiter:junit-jupiter'
+}
+
+bootJar {
+    baseName = 'online-store'
+    version = '0.1.0'
+}
+
+springBoot {
+    mainClassName = 'by.bsuir.application.Application'
+}
+
+

@@ -1,0 +1,5 @@
+rootProject.name = 'online-store'
+include 'dataaccess'
+include 'service'
+include 'web'
+

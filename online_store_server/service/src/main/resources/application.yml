@@ -1,0 +1,34 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 718521481200-v9urg8h1s2qfkbehmu85v76v714ia1cq.apps.googleusercontent.com
+            clientSecret: IH-ePKk5hwXYBSgMRbIgW0hj
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          github:
+            clientId: 0c3eb89b0213b375da01
+            clientSecret: 63ab3acb54954e9e9de80f4538145498658393bd
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 60000000000 #one minute; remove one 0 and show tokes death
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the frontend client in the /oauth2/authorize request.
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+
+
