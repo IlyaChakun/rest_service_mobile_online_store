@@ -1,0 +1,37 @@
+.basket-container {
+
+    margin-top: 10%;
+    margin-bottom: 10%;
+
+    /*
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+     */
+}
+
+
+.basket-content {
+    margin-top: 50px;
+
+}
+
+.basket-container-header {
+
+}
+
+
+.basket-checkout-logic {
+
+}
+
+.basket-container-footer {
+    text-align: center;
+    margin-top: 50px;
+}
+
+
+.quantity-cost-text {
+    margin-left: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+}
