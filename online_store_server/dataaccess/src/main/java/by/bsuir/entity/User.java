@@ -41,13 +41,14 @@ public class User extends AbstractEntity {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(cascade = {
-            CascadeType.MERGE
-    })
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.MERGE
+            })
     @JoinColumn(name = "user_id")
     private Set<Order> orders = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket basket;
 

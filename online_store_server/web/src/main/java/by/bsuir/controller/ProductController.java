@@ -75,27 +75,18 @@ public class ProductController {
 
 
     @GetMapping
-    public ResponseEntity<PageWrapper<ProductDto>> findAll(@RequestParam(defaultValue = "10", value = "size")
+    public ResponseEntity<PageWrapper<ProductDto>> findAll(@RequestParam(value = "size", defaultValue = "10")
                                                            @Positive(message = "Id must be positive!") Integer size,
-                                                           @RequestParam(defaultValue = "0", value = "page") Integer page,
-
+                                                           @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                            @RequestParam(value = "brands", required = false) List<String> brands,
-                                                           @RequestParam(value = "price", required = false) Double price,
+                                                           @RequestParam(value = "minPrice", required = false, defaultValue = "0") Double minPrice,
+                                                           @RequestParam(value = "maxPrice", required = false, defaultValue = "10000") Double maxPrice,
                                                            @RequestParam(value = "productName", required = false, defaultValue = "") String productName,
-
-                                                           @RequestParam(value = "sortBy", required = false, defaultValue = "price") String sortBy,//dateOfCreation
+                                                           @RequestParam(value = "sortBy", required = false, defaultValue = "price") String sortBy,
                                                            @RequestParam(value = "sortType", required = false, defaultValue = "ASC") String sortType) {
-
-
         Paging paging = new Paging(size, page);
         return new ResponseEntity<>(
-                productService.findAll(
-                        paging,
-                        brands,
-                        price,
-                        productName,
-                        sortBy,
-                        sortType),
+                productService.findAll(paging, brands, minPrice, maxPrice, productName, sortBy, sortType),
                 HttpStatus.OK);
     }
 

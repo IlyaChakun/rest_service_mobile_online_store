@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static by.bsuir.service.impl.ProductSpecification.findAllByBrands;
-import static by.bsuir.service.impl.ProductSpecification.findByProductNameLike;
+import static by.bsuir.repository.specification.ProductSpecification.*;
 import static org.springframework.util.Assert.notNull;
 
 @Service
@@ -86,7 +85,6 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(product);
     }
 
-
     @Override
     public ProductDto findById(Long id) {
         notNull(id, "Can`t delete, because id is null");
@@ -114,38 +112,24 @@ public class ProductServiceImpl implements ProductService {
                         .orElseGet(() -> brandRepository.save(brand));
     }
 
-
     @Override
     public PageWrapper<ProductDto> findAll(Paging paging,
                                            List<String> brands,
-                                           Double price,
+                                           Double minPrice,
+                                           Double maxPrice,
                                            String productName,
                                            String sortBy,
                                            String sortType) {
 
         //1
-        Sort sort = sortType.equals("ASC") ?
-                Sort.by(sortBy).ascending() :
-                Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(paging.getPage(), paging.getSize(), sort);
-
+        Pageable pageable = getPageable(paging, sortBy, sortType);
         //2
         List<Brand> resolvedBrands = resolveBrands(brands);
-
         //3
-//        Specification<Product> specification =
-//                Specification.where((ProductSpecification.findAllByBrands(resolvedBrands)))
-//                        .and(findByProductNameLike(productName));
-        //costil`
-        Specification<Product> specification =
-                Specification.where(findByProductNameLike(productName));
-        if (!resolvedBrands.isEmpty()) {
-            specification = specification.and(findAllByBrands(resolvedBrands));
-        }
-
+        Specification<Product> specification = getProductSpecification(productName, resolvedBrands, minPrice, maxPrice);
         //4
         Page<Product> page = productRepository.findAll(specification, pageable);
-
+        //5
         return
                 PageWrapper.of(
                         productMapper.toDtoList(page.toList()),
@@ -153,6 +137,29 @@ public class ProductServiceImpl implements ProductService {
                         page.getTotalElements(),
                         paging.getPage(),
                         page.getNumberOfElements());
+    }
+
+    private Specification<Product> getProductSpecification(String productName,
+                                                           List<Brand> resolvedBrands,
+                                                           Double minPrice,
+                                                           Double maxPrice) {
+
+        Specification<Product> specification =
+                Specification
+                        .where(findByProductNameLike(productName))
+                        .and(findByBetweenProductPrice(minPrice, maxPrice));
+
+        if (!resolvedBrands.isEmpty()) {
+            specification = specification.and(findAllByBrands(resolvedBrands));
+        }
+        return specification;
+    }
+
+    private Pageable getPageable(Paging paging, String sortBy, String sortType) {
+        Sort sort = sortType.equalsIgnoreCase("ASC") ?
+                Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+        return PageRequest.of(paging.getPage(), paging.getSize(), sort);
     }
 
     private List<Brand> resolveBrands(List<String> brandNames) {

@@ -13,9 +13,9 @@ public class Brand extends AbstractEntity {
     private String name;
     @Column(name = "description", length = 256)
     private String description;
-    //image?
 
     @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
             mappedBy = "brand")
     private Set<Product> products = new HashSet<>();
 
@@ -67,7 +67,6 @@ public class Brand extends AbstractEntity {
         return "Brand{" +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-               // ", products=" + products +
                 '}';
     }
 }

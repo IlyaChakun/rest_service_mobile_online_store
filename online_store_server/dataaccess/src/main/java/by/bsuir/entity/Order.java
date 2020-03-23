@@ -16,6 +16,7 @@ public class Order extends AbstractEntity {
     })
     private User user;
     @ManyToMany(
+            fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.MERGE
             })
@@ -95,7 +96,6 @@ public class Order extends AbstractEntity {
     public String toString() {
         return "Order{" +
                 "user=" + user +
-                // ", orderProducts=" + orderProducts +
                 ", cost=" + price +
                 ", dateOfPurchase=" + dateOfPurchase +
                 '}';

@@ -1,16 +1,14 @@
 package by.bsuir.service.dto.basket;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.io.Serializable;
 
-public class ProductBasketDto implements Serializable {
-    //@Null(message = "user id will set automatically")
+public class AddProductBasketDto implements Serializable {
     private Long userId;
     @NotNull(message = "productId must be set")
     private Long productId;
 
-    public ProductBasketDto() {
+    public AddProductBasketDto() {
     }
 
     public Long getUserId() {

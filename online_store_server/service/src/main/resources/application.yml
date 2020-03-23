@@ -7,15 +7,15 @@ spring:
       client:
         registration:
           google:
-            clientId: 718521481200-v9urg8h1s2qfkbehmu85v76v714ia1cq.apps.googleusercontent.com
-            clientSecret: IH-ePKk5hwXYBSgMRbIgW0hj
+            clientId: google
+            clientSecret: google
             redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           github:
-            clientId: 0c3eb89b0213b375da01
-            clientSecret: 63ab3acb54954e9e9de80f4538145498658393bd
+            clientId: git
+            clientSecret: git
             redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - user:email

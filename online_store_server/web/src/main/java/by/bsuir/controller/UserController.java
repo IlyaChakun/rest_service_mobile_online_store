@@ -86,12 +86,17 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(userPrincipal.getId()));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{userId}/orders")
     public ResponseEntity<PageWrapper<OrderDto>> findAllUsersOrders(@PathVariable("userId") Long userId,
                                                                     @RequestParam(defaultValue = "10", value = "size")
                                                                     @Positive(message = "Id must be positive!") Integer size,
-                                                                    @RequestParam(defaultValue = "0", value = "page") Integer page) {
-
+                                                                    @RequestParam(defaultValue = "0", value = "page") Integer page,
+                                                                    @CurrentUser UserPrincipal userPrincipal) {
+        if (!userPrincipal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                && !userPrincipal.getId().equals(userId)) {
+            throw new AccessDeniedException("You have no permissions!");
+        }
         Paging paging = new Paging(size, page);
         return new ResponseEntity<>(
                 orderService.findAllByUserId(paging, userId),

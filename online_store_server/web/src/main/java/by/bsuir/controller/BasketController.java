@@ -2,7 +2,7 @@ package by.bsuir.controller;
 
 import by.bsuir.service.BasketService;
 import by.bsuir.service.dto.basket.BasketDto;
-import by.bsuir.service.dto.basket.ProductBasketDto;
+import by.bsuir.service.dto.basket.AddProductBasketDto;
 import by.bsuir.service.dto.basket.UpdateProductBasketDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,11 +33,11 @@ public class BasketController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
     public ResponseEntity<BasketDto> addProduct(@PathVariable("userId") Long userId,
-                                                @RequestBody @Valid ProductBasketDto productBasketDto,
+                                                @RequestBody @Valid AddProductBasketDto addProductBasketDto,
                                                 BindingResult result) {
         checkBindingResultAndThrowExceptionIfInvalid(result);
-        productBasketDto.setUserId(userId);
-        BasketDto basketDto = basketService.addProduct(productBasketDto);
+        addProductBasketDto.setUserId(userId);
+        BasketDto basketDto = basketService.addProduct(addProductBasketDto);
 
         return new ResponseEntity<>(
                 basketDto, HttpStatus.CREATED);
@@ -59,11 +59,11 @@ public class BasketController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping
     public ResponseEntity<BasketDto> deleteProduct(@PathVariable("userId") Long userId,
-                                                   @RequestBody @Valid ProductBasketDto productBasketDto,
+                                                   @RequestBody @Valid AddProductBasketDto addProductBasketDto,
                                                    BindingResult result) {
         checkBindingResultAndThrowExceptionIfInvalid(result);
-        productBasketDto.setUserId(userId);
-        BasketDto basketDto = basketService.deleteProduct(productBasketDto);
+        addProductBasketDto.setUserId(userId);
+        BasketDto basketDto = basketService.deleteProduct(addProductBasketDto);
 
         return new ResponseEntity<>(
                 basketDto, HttpStatus.OK);

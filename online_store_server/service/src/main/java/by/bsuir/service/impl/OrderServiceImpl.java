@@ -115,7 +115,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto findByIdAndUserId(Long orderId, Long userId) {
-        return null;
+        Order order = orderRepository.findByIdAndUserId(orderId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No order with id=" + orderId + " for user with id=" + userId));
+
+        return orderMapper.toDto(order);
     }
 
 

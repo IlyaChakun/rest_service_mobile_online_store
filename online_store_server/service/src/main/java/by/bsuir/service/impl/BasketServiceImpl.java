@@ -3,13 +3,12 @@ package by.bsuir.service.impl;
 import by.bsuir.entity.Basket;
 import by.bsuir.entity.Product;
 import by.bsuir.entity.User;
-import by.bsuir.repository.BasketRepository;
 import by.bsuir.repository.ProductRepository;
 import by.bsuir.repository.UserRepository;
 import by.bsuir.service.BasketService;
 import by.bsuir.service.dto.basket.BasketDto;
 import by.bsuir.service.dto.basket.CountedProductBasketDto;
-import by.bsuir.service.dto.basket.ProductBasketDto;
+import by.bsuir.service.dto.basket.AddProductBasketDto;
 import by.bsuir.service.dto.basket.UpdateProductBasketDto;
 import by.bsuir.service.dto.mapper.ProductMapper;
 import by.bsuir.service.exception.ResourceNotFoundException;
@@ -28,25 +27,22 @@ public class BasketServiceImpl implements BasketService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-    private final BasketRepository basketRepository;
 
 
     @Autowired
     public BasketServiceImpl(UserRepository userRepository,
                              ProductRepository productRepository,
-                             ProductMapper productMapper,
-                             BasketRepository basketRepository) {
+                             ProductMapper productMapper) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.productMapper = productMapper;
-        this.basketRepository = basketRepository;
     }
 
     @Transactional
     @Override
-    public BasketDto addProduct(ProductBasketDto productBasketDto) {
-        User user = findUserById(productBasketDto.getUserId());
-        Product product = resolveProduct(productBasketDto.getProductId());
+    public BasketDto addProduct(AddProductBasketDto addProductBasketDto) {
+        User user = findUserById(addProductBasketDto.getUserId());
+        Product product = resolveProduct(addProductBasketDto.getProductId());
 
         Basket basket = user.getBasket();
         List<Product> basketProducts = basket.getBasketProducts();
@@ -68,9 +64,9 @@ public class BasketServiceImpl implements BasketService {
 
     @Transactional
     @Override
-    public BasketDto deleteProduct(ProductBasketDto productBasketDto) {
-        User user = findUserById(productBasketDto.getUserId());
-        Product product = findProductById(productBasketDto.getProductId());
+    public BasketDto deleteProduct(AddProductBasketDto addProductBasketDto) {
+        User user = findUserById(addProductBasketDto.getUserId());
+        Product product = findProductById(addProductBasketDto.getProductId());
 
         Basket basket = user.getBasket();
         List<Product> basketProducts = basket.getBasketProducts();
@@ -99,7 +95,16 @@ public class BasketServiceImpl implements BasketService {
         BigDecimal previousTotalPrice = basket.getTotalPrice();
         int previousQuantity = Collections.frequency(basketProducts, product);
 
+        calculateBasketProductCount(updateProductBasketDto, product, basket, basketProducts, previousTotalPrice, previousQuantity);
 
+        return buildCountedProductList(basketProducts);
+    }
+
+    private void calculateBasketProductCount(UpdateProductBasketDto updateProductBasketDto,
+                                             Product product, Basket basket,
+                                             List<Product> basketProducts,
+                                             BigDecimal previousTotalPrice,
+                                             int previousQuantity) {
         if (previousQuantity > updateProductBasketDto.getQuantity()) {
             for (int i = updateProductBasketDto.getQuantity(); previousQuantity != i; i++) {
                 basketProducts.remove(product);
@@ -111,19 +116,6 @@ public class BasketServiceImpl implements BasketService {
                 basket.setTotalPrice(previousTotalPrice.add(product.getPrice()));
             }
         }
-
-
-//        basketRepository.save(basket);
-//
-//        if (previousQuantity > updateProductBasketDto.getQuantity()) {
-//            basketProducts.remove(product);
-//            basket.setTotalPrice(previousTotalPrice.subtract(product.getPrice()));
-//        } else {
-//            basketProducts.add(product);
-//            basket.setTotalPrice(previousTotalPrice.add(product.getPrice()));
-//        }
-
-        return buildCountedProductList(basketProducts);
     }
 
     @Transactional
@@ -136,20 +128,28 @@ public class BasketServiceImpl implements BasketService {
     }
 
     private BasketDto buildCountedProductList(List<Product> products) {
-        Map<Product, Integer> productQuantityMap = new HashMap<>();//TODO
-        products.forEach(product -> productQuantityMap.put(product, Collections.frequency(products, product)));
+        Map<Product, Integer> productQuantityMap = getProductsMapWithQuantity(products);
 
         BigDecimal totalPrice = calculateTotalPrice(products);
         int totalElements = products.size();
 
-        List<CountedProductBasketDto> countedProductsList = productQuantityMap
-                .entrySet()
-                .stream()
-                .map((obj) -> new CountedProductBasketDto(productMapper.toDto(obj.getKey()), obj.getValue()))
-                .collect(Collectors.toList());
-
+        List<CountedProductBasketDto> countedProductsList = convertProductMapToListWithQuantity(productQuantityMap);
 
         return new BasketDto(countedProductsList, totalPrice, totalElements);
+    }
+
+    private List<CountedProductBasketDto> convertProductMapToListWithQuantity(Map<Product, Integer> productQuantityMap) {
+        return productQuantityMap
+                .entrySet()
+                .stream()
+                .map(obj -> new CountedProductBasketDto(productMapper.toDto(obj.getKey()), obj.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    private Map<Product, Integer> getProductsMapWithQuantity(List<Product> products) {
+        Map<Product, Integer> productQuantityMap = new HashMap<>();
+        products.forEach(product -> productQuantityMap.put(product, Collections.frequency(products, product)));
+        return productQuantityMap;
     }
 
     private BigDecimal calculateTotalPrice(List<Product> products) {
@@ -169,3 +169,5 @@ public class BasketServiceImpl implements BasketService {
                 .orElseThrow(() -> new ResourceNotFoundException("No product with id=" + productId));
     }
 }
+
+

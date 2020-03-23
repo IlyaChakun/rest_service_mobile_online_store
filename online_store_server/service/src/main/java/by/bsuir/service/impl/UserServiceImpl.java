@@ -91,6 +91,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(userDto);
         user.setRoles(prevUser.getRoles());
         user.setLastVisit(LocalDateTime.now());
+        user.setBasket(prevUser.getBasket());
         return userMapper.toDto(userRepository.save(user));
     }
 

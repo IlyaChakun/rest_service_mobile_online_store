@@ -32,15 +32,13 @@ public class BrandController {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<BrandDto>> findAll() {
-        //  Paging paging = new Paging(size, page);
         return new ResponseEntity<>(
                 brandService.findAll(), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/{id}")
     public ResponseEntity<BrandDto> findById(@PathVariable @Positive(message = "Id must be positive!") Long id) {
         return new ResponseEntity<>(

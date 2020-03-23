@@ -11,9 +11,10 @@ import java.util.Objects;
 @Table(name = "baskets")
 public class Basket extends AbstractEntity {
 
-    @OneToOne(mappedBy = "basket")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "basket")
     private User user;
     @ManyToMany(
+            fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.MERGE
             })

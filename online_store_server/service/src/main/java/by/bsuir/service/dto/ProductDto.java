@@ -18,7 +18,7 @@ public class ProductDto extends AbstractDto {
     private String description;
     @NotNull(message = "Price can`t be null")
     @Min(value = 0, message = "Price can`t be < 0")
-    @Max(value = 1_000_000, message = "Price must be smaller then 1_000_000")
+    @Max(value = 10_000, message = "Price must be smaller then 1_000_000")
     private BigDecimal price;
     @Null(message = "Date of creation will set automatically!")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

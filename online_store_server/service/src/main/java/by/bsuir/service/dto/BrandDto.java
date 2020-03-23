@@ -8,14 +8,11 @@ import javax.validation.constraints.Pattern;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BrandDto extends AbstractDto {
 
-
     @NotBlank(message = "Name can`t be null and spaces!")
     @Pattern(regexp = ".{3,64}", message = "Name must be more then 5 symbols, but smaller than 64 ")
     private String name;
-
     @Pattern(regexp = ".{0,512}", message = "Description can`t be bigger then 512 symbols")
     private String description;
-    //image?
 
 
     public BrandDto() {

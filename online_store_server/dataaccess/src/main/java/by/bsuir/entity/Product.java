@@ -25,7 +25,7 @@ public class Product extends AbstractEntity {
     private Integer countAvailable;
     @ManyToOne(fetch = FetchType.LAZY)
     private Brand brand;
-    @ManyToMany(mappedBy = "orderProducts")
+    @ManyToMany(mappedBy = "orderProducts", fetch = FetchType.LAZY)
     private Set<Order> ordersWithProduct = new HashSet<>();
     @Column(name = "image_url", length = 900_000)
     private String imageUrl;

@@ -16,17 +16,11 @@ public interface ProductService {
 
     ProductDto findById(Long id);
 
-//    PageWrapper<ProductDto> findAll(Paging paging,
-//                                    String sortBy,
-//                                    String sortType,
-//                                    String productName,
-//                                    String brandName);
-
     PageWrapper<ProductDto> findAll(Paging paging,
                                     List<String> brands,
-                                    Double price,
+                                    Double minPrice,
+                                    Double maxPrice,
                                     String productName,
                                     String sortBy,
                                     String sortType);
-
 }

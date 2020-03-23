@@ -1,14 +1,14 @@
 package by.bsuir.service;
 
 import by.bsuir.service.dto.basket.BasketDto;
-import by.bsuir.service.dto.basket.ProductBasketDto;
+import by.bsuir.service.dto.basket.AddProductBasketDto;
 import by.bsuir.service.dto.basket.UpdateProductBasketDto;
 
 public interface BasketService {
 
-    BasketDto addProduct(ProductBasketDto productBasketDto);
+    BasketDto addProduct(AddProductBasketDto addProductBasketDto);
 
-    BasketDto deleteProduct(ProductBasketDto productBasketDto);
+    BasketDto deleteProduct(AddProductBasketDto addProductBasketDto);
 
     BasketDto updateProduct(UpdateProductBasketDto updateProductBasketDto);
 

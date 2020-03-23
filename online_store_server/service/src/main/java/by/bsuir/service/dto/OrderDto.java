@@ -15,14 +15,11 @@ public class OrderDto extends AbstractDto {
 
     @Valid
     private UserDto user;
-
     @Valid
     @NotNull(message = "Add at least one certificate!")
     private List<ProductDto> orderProducts = new ArrayList<>();
-
     @Null(message = "Price will calculate automatically!")
     private BigDecimal price;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH.mm")
     @Null(message = "Date of purchase will set automatically!")
     private LocalDateTime dateOfPurchase;
