@@ -173,7 +173,7 @@ class Basket extends PureComponent {
                         </FormItem>
 
                         <FormItem className="certificate-form-row" wrapperCol={{...layout.wrapperCol, offset: 8}}>
-                            <span>
+                             <span className="quantity-cost-text">
                                 Общая сумма: {this.state.totalPrice} за {this.state.totalElements} товар(ов)
                             </span>
                         </FormItem>

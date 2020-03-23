@@ -2,14 +2,12 @@ import React, {PureComponent} from 'react';
 
 import './Product.css';
 
-import {Form, Rate, Select, Tag} from 'antd';
+import {Rate, Tag} from 'antd';
 import Card from "antd/es/card";
 import Meta from "antd/es/card/Meta";
 import {withRouter,} from "react-router-dom";
 
 import noImage from '../img/no_img.png';
-import {addProductToBasket} from "../util/APIUtils";
-import {localizedStrings} from "../util/Localization";
 
 class ProductCart extends PureComponent {
 
@@ -84,9 +82,7 @@ class ProductCart extends PureComponent {
 
 
                                 <div className="product-rating-footer">
-                                    <Form.Item name="rate" label="">
-                                        <Rate/>
-                                    </Form.Item>
+                                    <Rate/>
                                 </div>
                             </div>
                         }

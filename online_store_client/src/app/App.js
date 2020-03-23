@@ -19,7 +19,7 @@ import AppFooter from "../common/footer/AppFooter";
 
 
 import {localizedStrings} from "../util/Localization";
-import ProductList from "../product/ProductList";
+import ProductList from "../product/list/ProductList";
 import AddProduct from "../product/action/AddProduct";
 import EditProduct from "../product/action/EditProduct";
 import PrivateAdminRoute from "./util/PrivateAdminRoute";

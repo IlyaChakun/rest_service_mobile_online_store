@@ -11,12 +11,10 @@ import {Form, Input, message, Select, Upload} from 'antd';
 import {localizedStrings} from "../../util/Localization";
 import Button from "antd/es/button";
 import {getAllBrands} from "../../util/APIUtils";
-import Product from "../ProductCart";
 
 import {InboxOutlined} from '@ant-design/icons';
-import FormItemLabel from "antd/es/form/FormItemLabel";
 import LoadingOutlined from "@ant-design/icons/lib/icons/LoadingOutlined";
-import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import {beforeUpload, getBase64} from "../../util/PictureLoaderUtil";
 
 const {Dragger} = Upload;
 
@@ -98,8 +96,6 @@ class ProductForm extends PureComponent {
             imageUrl: this.state.imageUrl,
             brand: brand
         };
-
-        console.log('add works', productData)
 
         this.props.handleSubmitButton(productData);
     };
@@ -432,23 +428,6 @@ class ProductForm extends PureComponent {
 }
 
 
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-}
-
-function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-        message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
-}
 
 
 export default ProductForm;

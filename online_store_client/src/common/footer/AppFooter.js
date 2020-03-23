@@ -11,7 +11,10 @@ class AppFooter extends Component {
         return (
             <Footer className="app-footer">
                 <div className="app-footer-end-page">
-                    <a>{localizedStrings.certificates}</a> {localizedStrings.footerText}
+                    <a>
+                        {localizedStrings.certificates}
+                    </a>
+                    {localizedStrings.footerText}
                 </div>
             </Footer>
         )

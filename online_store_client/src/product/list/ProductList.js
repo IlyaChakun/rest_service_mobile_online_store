@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import Product from "./ProductCart";
 import List from "antd/es/list";
-import {getAllProducts} from "../util/APIUtils";
+import {getAllProducts} from "../../util/APIUtils";
 
 import './ProductList.css';
 import {withRouter} from "react-router-dom";
-import ProductCartProxy from "./ProductCartProxy";
+import ProductCartProxy from "../ProductCartProxy";
+import ListFilterLogic from "./ListFilterLogic";
 
 class ProductList extends Component {
 
@@ -13,6 +13,7 @@ class ProductList extends Component {
         super(props);
 
         this.state = {
+
             products: [],
 
             page: 0,
@@ -31,11 +32,23 @@ class ProductList extends Component {
     }
 
 
-    loadList = (page, size) => {
+    loadSearchList = (productName, minPrice, maxPrice, sortBy, sortType, checkedBrands) => {
+        this.loadList(this.state.page, this.state.size, productName, minPrice, maxPrice, sortBy, sortType, checkedBrands);
+    };
+
+
+    loadList = (page, size, productName, minPrice, maxPrice, sortBy, sortType, checkedBrands) => {
+
         const searchCriteria = {
             page: page,
             size: size,
 
+            productName: productName,
+            minPrice: minPrice,
+            maxPrice: maxPrice,
+            sortBy: sortBy,
+            sortType: sortType,
+            checkedBrands: checkedBrands
         };
 
         const promise = getAllProducts(searchCriteria);
@@ -89,16 +102,10 @@ class ProductList extends Component {
         return (
             <div className="products-container">
 
-
-                <div className="certificates-container-header">
-
+                <div>
+                    <ListFilterLogic loadSearchList={this.loadSearchList}
+                                     totalElements={this.state.totalElements}/>
                 </div>
-
-
-                <aside className="aside-position">
-
-
-                </aside>
 
 
                 <div className="certificates-content">

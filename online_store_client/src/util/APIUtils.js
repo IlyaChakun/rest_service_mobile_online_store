@@ -38,19 +38,23 @@ export function getAllBrands() {
 
 
 export function getAllProducts(searchCriteria) {
-    // const url = API_BASE_URL +
-    //     "/gift-certificates?" +
-    //     "page=" + searchCriteria.page +
-    //     "&size=" + searchCriteria.size +
-    //     "&sortBy=" + searchCriteria.sortBy +
-    //     "&giftName=" + searchCriteria.giftName +
-    //     "&tagName=" + searchCriteria.tagName;
 
-    const page = searchCriteria.page !== 0 ? searchCriteria.page - 1 : searchCriteria.page;
+    let brandsStr = '';
+    if (searchCriteria.checkedBrands !== undefined) {
+        for (let i = 0; i < searchCriteria.checkedBrands.length; i++) {
+            brandsStr = brandsStr + '&brands=' + searchCriteria.checkedBrands[i];
+        }
+    }
+    const page = 'page=' + Number(searchCriteria.page !== 0 ? searchCriteria.page - 1 : searchCriteria.page);
+    const size = '&size=' + Number(searchCriteria.size);
+    const sortBy = searchCriteria.sortBy === undefined ? '' : '&sortBy=' + searchCriteria.sortBy;
+    const sortType = searchCriteria.sortType === undefined ? '' : '&sortType=' + searchCriteria.sortType;
+    const productName = searchCriteria.productName === undefined ? '' : '&productName=' + searchCriteria.productName;
+    const minPrice = searchCriteria.minPrice === undefined ? '' : '&minPrice=' + Number(searchCriteria.minPrice);
+    const maxPrice = searchCriteria.maxPrice === undefined ? '' : '&maxPrice=' + Number(searchCriteria.maxPrice);
 
-    const url = API_BASE_URL + '/products?' +
-        "page=" + page
-        + "&size=" + searchCriteria.size;
+    const url = API_BASE_URL +
+        "/products?" + page + size + sortBy + sortType + productName + minPrice + maxPrice + brandsStr;
 
     console.log('URL', url);
 

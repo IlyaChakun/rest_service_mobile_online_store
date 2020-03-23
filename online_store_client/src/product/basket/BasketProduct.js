@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
-import {InputNumber, Popconfirm} from "antd";
+import {InputNumber, notification, Popconfirm} from "antd";
 import ProductCart from "../ProductCart";
+import {localizedStrings} from "../../util/Localization";
 
 
 class BasketProduct extends Component {
 
+    state = {
+        quantity: this.props.productWithQuantity.quantity
+    };
 
     confirm = (e) => {
         this.props.deleteProductFromBasket(this.props.productWithQuantity.product.id)
@@ -13,10 +17,28 @@ class BasketProduct extends Component {
 
 
     updateProductCount = (quantity) => {
-        if (Number(quantity) !== 0) {
-            const productId = this.props.productWithQuantity.product.id;
-            this.props.updateProductQuantity(quantity, productId);
+        if (quantity >= 1 && quantity < 99) {
+            if (Number(quantity) !== 0) {
+                const productId = this.props.productWithQuantity.product.id;
+                this.props.updateProductQuantity(quantity, productId);
+            }
+            this.setState({
+                quantity: quantity
+            });
+        } else {
+            this.setState({
+                quantity: this.props.productWithQuantity.quantity
+            });
+            notification.error({
+                message: localizedStrings.alertAppName,
+                description: 'Количество должно быть не менее 0 и не более 99',
+            });
         }
+    };
+
+
+    customFormatter = (value) => {
+        return value < 1 || value > 99 ? this.state.quantity : value;
     };
 
 
@@ -36,10 +58,13 @@ class BasketProduct extends Component {
         const countAction = (
             <div>
 
-                <InputNumber defaultValue={this.props.productWithQuantity.quantity}
+                <InputNumber defaultValue={this.state.quantity}
+                             value={this.state.quantity}
+                             type={'number'}
                              min={1}
                              max={99}
-                             onChange={(event) => this.updateProductCount(event)}
+                             formatter={this.customFormatter}
+                             onChange={this.updateProductCount}
                 />
 
                 <span className="quantity-cost-text">

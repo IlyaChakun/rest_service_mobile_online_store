@@ -8,13 +8,12 @@
     box-shadow: 0 2px 8px #f0f1f2;
     z-index: 10;
     padding: 0;
+
 }
 
 
 .app-footer-end-page {
-    /*float: ;*/
     text-align: center;
-    margin-top: 1%;
     text-decoration: underline;
     font-size: 14px;
 }
