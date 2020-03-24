@@ -3,11 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-app-rewired start",
-    "dev": "webpack-dev-server --open --config wp/webpack.dev.config.js",
-    "build": "react-app-rewired wp",
-    "test": "react-app-rewired test --env=jsdom",
-    "eject": "react-scripts eject"
+    "dev": "webpack-dev-server --open --config wp/webpack.dev.config.js"
   },
   "dependencies": {
     "@babel/cli": "^7.6.4",
