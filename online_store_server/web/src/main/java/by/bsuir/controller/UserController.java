@@ -6,10 +6,8 @@ import by.bsuir.security.UserPrincipal;
 import by.bsuir.security.dto.SignUpRequest;
 import by.bsuir.service.OrderService;
 import by.bsuir.service.UserService;
-import by.bsuir.service.dto.OrderDto;
-import by.bsuir.service.dto.PageWrapper;
-import by.bsuir.service.dto.Paging;
-import by.bsuir.service.dto.UserDto;
+import by.bsuir.service.dto.*;
+import by.bsuir.service.dto.order.OrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -59,6 +57,18 @@ public class UserController {
         return new ResponseEntity<>(addedUser, httpHeaders, HttpStatus.CREATED);
     }
 
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable("id") Long userId,
+                                          @RequestBody @Valid UpdateUserDto updateUserDto,
+                                          BindingResult result) {
+        checkBindingResultAndThrowExceptionIfInvalid(result);
+        updateUserDto.setId(userId);
+        UserDto updated = userService.updateUserProfile(updateUserDto);
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll(@RequestParam(defaultValue = "10", value = "size")
@@ -98,8 +108,10 @@ public class UserController {
             throw new AccessDeniedException("You have no permissions!");
         }
         Paging paging = new Paging(size, page);
+        PageWrapper<OrderDto> orders = orderService.findAllByUserId(paging, userId);
+
         return new ResponseEntity<>(
-                orderService.findAllByUserId(paging, userId),
+                orders,
                 HttpStatus.OK);
     }
 

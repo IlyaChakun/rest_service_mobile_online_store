@@ -9,11 +9,14 @@ import by.bsuir.repository.OrderRepository;
 import by.bsuir.repository.ProductRepository;
 import by.bsuir.repository.UserRepository;
 import by.bsuir.service.OrderService;
-import by.bsuir.service.dto.OrderCreateDto;
-import by.bsuir.service.dto.OrderDto;
 import by.bsuir.service.dto.PageWrapper;
 import by.bsuir.service.dto.Paging;
 import by.bsuir.service.dto.mapper.OrderMapper;
+import by.bsuir.service.dto.mapper.ProductMapper;
+import by.bsuir.service.dto.mapper.UserMapper;
+import by.bsuir.service.dto.order.CountedOrderDto;
+import by.bsuir.service.dto.order.OrderCreateDto;
+import by.bsuir.service.dto.order.OrderDto;
 import by.bsuir.service.exception.ResourceNotFoundException;
 import by.bsuir.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +27,14 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private final ProductMapper productMapper;
+    private final UserMapper userMapper;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
@@ -38,11 +43,15 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Autowired
-    public OrderServiceImpl(ProductRepository productRepository,
+    public OrderServiceImpl(ProductMapper productMapper,
+                            UserMapper userMapper,
+                            ProductRepository productRepository,
                             UserRepository userRepository,
                             OrderRepository orderRepository,
                             OrderMapper orderMapper,
                             BasketRepository basketRepository) {
+        this.productMapper = productMapper;
+        this.userMapper = userMapper;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
@@ -79,7 +88,6 @@ public class OrderServiceImpl implements OrderService {
 
     private void clearBasket(Basket basket) {
         basket.setBasketProducts(null);
-        basket.setTotalPrice(BigDecimal.ZERO);
         basketRepository.save(basket);
     }
 
@@ -90,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
                         .map(basketProduct -> {
                             Product product = productRepository.findById(basketProduct.getId())
                                     .orElseThrow(() -> new ResourceNotFoundException("No product with id=" + basketProduct.getId()));
-                            if (product.getCountAvailable() == 0) { //
+                            if (product.getCountAvailable() == 0) {
                                 throw new ServiceException("Product with name=" + product.getName() + " is unavailable now!");
                             } else {
                                 product.setCountAvailable(product.getCountAvailable() - 1);
@@ -124,7 +132,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageWrapper<OrderDto> findAllByUserId(Paging paging, Long userId) {
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("No user with id=" + userId));
 
@@ -132,12 +139,48 @@ public class OrderServiceImpl implements OrderService {
 
         Page<Order> page = orderRepository.findAllByUser(pageable, user);
 
+        List<OrderDto> orderDtoList = new ArrayList<>();
+        page.getContent().forEach(order -> orderDtoList.add(buildCountedProductList(order)));
+
         return
                 PageWrapper.of(
-                        orderMapper.toDtoList(page.toList()),
+                        orderDtoList,
                         page.getTotalPages(),
                         page.getTotalElements(),
                         paging.getPage(),
                         page.getNumberOfElements());
     }
+
+
+    private OrderDto buildCountedProductList(Order order) {
+
+        List<Product> products = order.getOrderProducts();
+        Map<Product, Integer> productQuantityMap = getProductsMapWithQuantity(products);
+        int totalElements = products.size();
+
+        List<CountedOrderDto> countedProductsList = convertProductMapToListWithQuantity(productQuantityMap);
+
+        return new OrderDto(
+                userMapper.toDto(order.getUser()),
+                order.getPrice(),
+                order.getDateOfPurchase(),
+                order.getDeliveryType(),
+                countedProductsList,
+                totalElements);
+    }
+
+    private List<CountedOrderDto> convertProductMapToListWithQuantity(Map<Product, Integer> productQuantityMap) {
+        return productQuantityMap
+                .entrySet()
+                .stream()
+                .map(obj -> new CountedOrderDto(productMapper.toDto(obj.getKey()), obj.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    private Map<Product, Integer> getProductsMapWithQuantity(List<Product> products) {
+        Map<Product, Integer> productQuantityMap = new HashMap<>();
+        products.forEach(product -> productQuantityMap.put(product, Collections.frequency(products, product)));
+        return productQuantityMap;
+    }
+
 }

@@ -1,9 +1,9 @@
 package by.bsuir.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -16,15 +16,21 @@ public class Role extends AbstractEntity {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "roles_users",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<User> users = new HashSet<>();
 
     public Role() {
     }
 
-    public Role(String name) {
-        this.name = name;
-    }
 
     public String getName() {
         return name;

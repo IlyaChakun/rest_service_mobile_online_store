@@ -11,7 +11,7 @@ public abstract class AbstractDto implements Serializable {
     @PositiveOrZero(message = "Id can`t be smaller than 0 ")
     private Long id;
 
-    AbstractDto() {
+    public AbstractDto() {
     }
 
     public Long getId() {

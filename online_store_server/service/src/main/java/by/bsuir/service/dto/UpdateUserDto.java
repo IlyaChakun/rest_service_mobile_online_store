@@ -1,11 +1,15 @@
-package by.bsuir.security.dto;
+package by.bsuir.service.dto;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UpdateUserDto extends AbstractDto {
 
-public class SignUpRequest {
 
     @NotBlank(message = "Name can`t be null or spaces")
     @Pattern(regexp = ".{5,30}", message = "Name can`t be smaller then 5 symbols and bigger then 30 symbols")
@@ -15,15 +19,10 @@ public class SignUpRequest {
     @Email(message = "Email should be correct!")
     private String email;
 
-    @NotBlank(message = "Password can`t be null or spaces")
-    @Pattern(regexp = ".{5,30}", message = "Pass can`t be smaller then 5 symbols and bigger then 30 symbols")
-    private String password;
-
-    @NotBlank(message = "Confirmed password can`t be null or spaces!")
-    @Pattern(regexp = ".{5,30}", message = "Confirmed pass can`t be smaller then 5 symbols and bigger then 30 symbols")
-    private String confirmedPassword;
-
     private String imageUrl;
+
+    public UpdateUserDto() {
+    }
 
     public String getName() {
         return name;
@@ -39,22 +38,6 @@ public class SignUpRequest {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getConfirmedPassword() {
-        return confirmedPassword;
-    }
-
-    public void setConfirmedPassword(String confirmedPassword) {
-        this.confirmedPassword = confirmedPassword;
     }
 
     public String getImageUrl() {

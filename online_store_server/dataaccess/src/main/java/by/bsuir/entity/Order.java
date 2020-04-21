@@ -11,10 +11,12 @@ import java.util.Objects;
 @Entity
 @Table(name = "orders")
 public class Order extends AbstractEntity {
+
     @ManyToOne(cascade = {
             CascadeType.MERGE
     })
     private User user;
+
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {
@@ -25,8 +27,10 @@ public class Order extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> orderProducts = new ArrayList<>();
+
     @Column(name = "price", nullable = false)
     private BigDecimal price;
+
     @Column(name = "date_of_purchase", nullable = false)
     private LocalDateTime dateOfPurchase;
 

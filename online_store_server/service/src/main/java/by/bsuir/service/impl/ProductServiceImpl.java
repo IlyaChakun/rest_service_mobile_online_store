@@ -8,6 +8,7 @@ import by.bsuir.service.ProductService;
 import by.bsuir.service.dto.PageWrapper;
 import by.bsuir.service.dto.Paging;
 import by.bsuir.service.dto.ProductDto;
+import by.bsuir.service.dto.ProductSearchCriteriaDto;
 import by.bsuir.service.dto.mapper.ProductMapper;
 import by.bsuir.service.exception.ResourceNotFoundException;
 import by.bsuir.service.exception.ServiceException;
@@ -20,7 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -51,12 +52,12 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.findByName(productDto.getName())
                 .ifPresent(value -> {
-                    throw new ServiceException("Sorry, but product with name=" + value.getName() + " is already present! Just modify previous version.");
+                    throw new ServiceException("Sorry, but product with name="
+                            + value.getName() + " is already present! Just modify previous version.");
                 });
 
         Product product = productMapper.toEntity(productDto);
-        product.setDateOfModification(LocalDate.now());
-        product.setDateOfCreation(LocalDate.now());
+        product.setDateOfCreation(LocalDateTime.now());
         product.setBrand(resolveBrand(product.getBrand()));
 
         return productMapper.toDto(productRepository.save(product));
@@ -69,7 +70,6 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(productDto.getId()));
         Product productForUpdate = productMapper.toEntity(productDto);
         productForUpdate.setDateOfCreation(prevProduct.getDateOfCreation());
-        productForUpdate.setDateOfModification(LocalDate.now());
         productForUpdate.setBrand(resolveBrand(productForUpdate.getBrand()));
 
         return productMapper.toDto(productRepository.save(productForUpdate));
@@ -79,8 +79,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) {
         notNull(id, "Can`t delete, because productId is null");
+
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        if (!product.getOrdersWithProduct().isEmpty()) {
+            throw new ServiceException("You can`t delete this product because it`s already "
+                    + product.getOrdersWithProduct().size() + " orders with him!");
+        }
 
         productRepository.delete(product);
     }
@@ -113,23 +119,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageWrapper<ProductDto> findAll(Paging paging,
-                                           List<String> brands,
-                                           Double minPrice,
-                                           Double maxPrice,
-                                           String productName,
-                                           String sortBy,
-                                           String sortType) {
+    public PageWrapper<ProductDto> findAll(Paging paging, ProductSearchCriteriaDto productSearchCriteriaDto) {
 
-        //1
-        Pageable pageable = getPageable(paging, sortBy, sortType);
-        //2
-        List<Brand> resolvedBrands = resolveBrands(brands);
-        //3
-        Specification<Product> specification = getProductSpecification(productName, resolvedBrands, minPrice, maxPrice);
-        //4
+        Pageable pageable = getPageable(paging, productSearchCriteriaDto.getSortBy(), productSearchCriteriaDto.getSortType());
+        List<Brand> resolvedBrands = resolveBrands(productSearchCriteriaDto.getBrands());
+        Specification<Product> specification =
+                getProductSpecification(productSearchCriteriaDto.getProductName(),
+                        resolvedBrands, productSearchCriteriaDto.getMinPrice(), productSearchCriteriaDto.getMaxPrice());
         Page<Product> page = productRepository.findAll(specification, pageable);
-        //5
         return
                 PageWrapper.of(
                         productMapper.toDtoList(page.toList()),

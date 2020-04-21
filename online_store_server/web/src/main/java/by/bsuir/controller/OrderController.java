@@ -1,8 +1,8 @@
 package by.bsuir.controller;
 
 import by.bsuir.service.OrderService;
-import by.bsuir.service.dto.OrderCreateDto;
-import by.bsuir.service.dto.OrderDto;
+import by.bsuir.service.dto.order.OrderCreateDto;
+import by.bsuir.service.dto.order.OrderDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

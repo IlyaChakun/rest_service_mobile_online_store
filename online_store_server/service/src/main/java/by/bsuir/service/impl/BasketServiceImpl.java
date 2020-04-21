@@ -6,9 +6,9 @@ import by.bsuir.entity.User;
 import by.bsuir.repository.ProductRepository;
 import by.bsuir.repository.UserRepository;
 import by.bsuir.service.BasketService;
+import by.bsuir.service.dto.basket.AddProductBasketDto;
 import by.bsuir.service.dto.basket.BasketDto;
 import by.bsuir.service.dto.basket.CountedProductBasketDto;
-import by.bsuir.service.dto.basket.AddProductBasketDto;
 import by.bsuir.service.dto.basket.UpdateProductBasketDto;
 import by.bsuir.service.dto.mapper.ProductMapper;
 import by.bsuir.service.exception.ResourceNotFoundException;
@@ -46,13 +46,18 @@ public class BasketServiceImpl implements BasketService {
 
         Basket basket = user.getBasket();
         List<Product> basketProducts = basket.getBasketProducts();
-        basketProducts.add(product);
+        int previousQuantity = Collections.frequency(basketProducts, product);
 
-        BigDecimal totalPrice = basket.getTotalPrice();
-        basket.setTotalPrice(totalPrice.add(product.getPrice()));
+        if (product.getCountAvailable() < previousQuantity + 1) {
+            throw new ServiceException(" You entered more quantity then available. " +
+                    "Only " + product.getCountAvailable() + " products available and you already have " + product.getCountAvailable());
+        }
+
+        basketProducts.add(product);
 
         return buildCountedProductList(new ArrayList<>(basketProducts));
     }
+
 
     private Product resolveProduct(Long productId) {
         Product product = findProductById(productId);
@@ -70,14 +75,7 @@ public class BasketServiceImpl implements BasketService {
 
         Basket basket = user.getBasket();
         List<Product> basketProducts = basket.getBasketProducts();
-
-        int quantity = Collections.frequency(basketProducts, product);
         basketProducts.removeIf(basketProduct -> basketProduct.equals(product));
-
-        BigDecimal previousTotalPrice = basket.getTotalPrice();
-        BigDecimal newTotalPrice = previousTotalPrice.subtract(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
-        basket.setTotalPrice(newTotalPrice);
-
 
         return buildCountedProductList(basketProducts);
     }
@@ -89,31 +87,30 @@ public class BasketServiceImpl implements BasketService {
         User user = findUserById(updateProductBasketDto.getUserId());
         Product product = findProductById(updateProductBasketDto.getProductId());
 
+        if (product.getCountAvailable() < updateProductBasketDto.getQuantity()) {
+            throw new ServiceException(" You entered more quantity then available. " +
+                    "Only " + product.getCountAvailable() + " products available!");
+        }
+
         Basket basket = user.getBasket();
         List<Product> basketProducts = basket.getBasketProducts();
 
-        BigDecimal previousTotalPrice = basket.getTotalPrice();
-        int previousQuantity = Collections.frequency(basketProducts, product);
-
-        calculateBasketProductCount(updateProductBasketDto, product, basket, basketProducts, previousTotalPrice, previousQuantity);
+        calculateBasketProductCount(updateProductBasketDto, product, basketProducts);
 
         return buildCountedProductList(basketProducts);
     }
 
     private void calculateBasketProductCount(UpdateProductBasketDto updateProductBasketDto,
-                                             Product product, Basket basket,
-                                             List<Product> basketProducts,
-                                             BigDecimal previousTotalPrice,
-                                             int previousQuantity) {
+                                             Product product,
+                                             List<Product> basketProducts) {
+        int previousQuantity = Collections.frequency(basketProducts, product);
         if (previousQuantity > updateProductBasketDto.getQuantity()) {
-            for (int i = updateProductBasketDto.getQuantity(); previousQuantity != i; i++) {
+            for (int newQuantity = updateProductBasketDto.getQuantity(); previousQuantity != newQuantity; newQuantity++) {
                 basketProducts.remove(product);
-                basket.setTotalPrice(previousTotalPrice.subtract(product.getPrice()));
             }
         } else {
-            for (int i = previousQuantity; updateProductBasketDto.getQuantity() != i; i++) {
+            for (; updateProductBasketDto.getQuantity() != previousQuantity; previousQuantity++) {
                 basketProducts.add(product);
-                basket.setTotalPrice(previousTotalPrice.add(product.getPrice()));
             }
         }
     }

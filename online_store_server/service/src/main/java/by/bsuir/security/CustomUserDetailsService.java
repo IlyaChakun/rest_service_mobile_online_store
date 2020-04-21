@@ -25,12 +25,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        System.out.println("email " + email);
         UserDto user = userService.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with email : " + email)
                 );
-        System.out.println(user.getRoles());
+
         return UserPrincipal.create(user);
     }
 

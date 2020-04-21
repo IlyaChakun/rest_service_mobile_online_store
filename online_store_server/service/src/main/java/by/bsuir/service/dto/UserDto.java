@@ -19,7 +19,9 @@ public class UserDto extends AbstractDto {
     private String password;
     private String email;
     private String imageUrl;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH.mm")
+
     private LocalDateTime lastVisit;
     private SupportedAuthProvider provider;
     private List<RoleDto> roles = new ArrayList<>();

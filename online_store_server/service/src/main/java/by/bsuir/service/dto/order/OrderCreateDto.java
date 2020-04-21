@@ -1,4 +1,4 @@
-package by.bsuir.service.dto;
+package by.bsuir.service.dto.order;
 
 import by.bsuir.entity.OrderDeliveryType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

@@ -1,7 +1,6 @@
 package by.bsuir.entity;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ public class Basket extends AbstractEntity {
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "basket")
     private User user;
+
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {
@@ -23,9 +23,6 @@ public class Basket extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> basketProducts = new ArrayList<>();
-
-    @Column(name = "total_price", nullable = false)
-    private BigDecimal totalPrice = BigDecimal.ZERO;
 
     @Column(name = "last_update", nullable = false)
     private LocalDateTime lastUpdate;
@@ -51,14 +48,6 @@ public class Basket extends AbstractEntity {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public LocalDateTime getLastUpdate() {

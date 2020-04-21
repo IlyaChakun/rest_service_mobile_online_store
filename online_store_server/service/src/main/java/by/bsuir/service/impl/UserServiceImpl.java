@@ -1,6 +1,7 @@
 package by.bsuir.service.impl;
 
 import by.bsuir.entity.Basket;
+import by.bsuir.entity.Role;
 import by.bsuir.entity.SupportedAuthProvider;
 import by.bsuir.entity.User;
 import by.bsuir.repository.RoleRepository;
@@ -8,6 +9,7 @@ import by.bsuir.repository.UserRepository;
 import by.bsuir.security.dto.SignUpRequest;
 import by.bsuir.service.UserService;
 import by.bsuir.service.dto.Paging;
+import by.bsuir.service.dto.UpdateUserDto;
 import by.bsuir.service.dto.UserDto;
 import by.bsuir.service.dto.mapper.UserMapper;
 import by.bsuir.service.exception.ResourceNotFoundException;
@@ -20,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
         userDto.setEmail(signUpRequest.getEmail());
         userDto.setProvider(SupportedAuthProvider.local);
         userDto.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        userDto.setImageUrl(signUpRequest.getImageUrl());
 
         return this.save(userDto);
     }
@@ -68,8 +70,9 @@ public class UserServiceImpl implements UserService {
                         }
                 );
         User userToSave = userMapper.toEntity(userDto);
-        userToSave.setLastVisit(LocalDateTime.now());
-        userToSave.setRoles(Collections.singleton(roleRepository.findByName("ROLE_USER")));
+
+        Role role = roleRepository.findByName("ROLE_USER");
+        userToSave.setRoles(Collections.singleton(role));
 
         User saved = userRepository.save(userToSave);
         Basket basket = new Basket();
@@ -90,9 +93,21 @@ public class UserServiceImpl implements UserService {
                 );
         User user = userMapper.toEntity(userDto);
         user.setRoles(prevUser.getRoles());
-        user.setLastVisit(LocalDateTime.now());
         user.setBasket(prevUser.getBasket());
         return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public UserDto updateUserProfile(UpdateUserDto updateUserDto) {
+        User prevUser = userRepository.findById(updateUserDto.getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(updateUserDto.getId())
+                );
+        prevUser.setName(updateUserDto.getName());
+        prevUser.setEmail(updateUserDto.getEmail());
+        prevUser.setImageUrl(updateUserDto.getImageUrl());
+        return userMapper.toDto(userRepository.save(prevUser));
     }
 
     @Transactional

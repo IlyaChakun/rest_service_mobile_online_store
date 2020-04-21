@@ -20,25 +20,17 @@ public class User extends AbstractEntity {
     @Column(name = "email", length = 128, unique = true)
     private String email;
 
-    @Column(name = "image_url", length = 1256)
+    @Column(name = "image_url", length = 900_000)
     private String imageUrl;
 
     @Column(name = "last_visit", nullable = false)
     private LocalDateTime lastVisit;
-
     @Column(name = "provider", nullable = false)
+
     @Enumerated(EnumType.STRING)
     private SupportedAuthProvider provider;
 
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.MERGE
-            })
-    @JoinTable(name = "roles_users",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @ManyToMany(mappedBy = "users")
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY,
@@ -53,6 +45,17 @@ public class User extends AbstractEntity {
     private Basket basket;
 
     public User() {
+    }
+
+
+    @PrePersist
+    private void onCreate() {
+        lastVisit = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        lastVisit = LocalDateTime.now();
     }
 
 

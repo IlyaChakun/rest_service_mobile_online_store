@@ -8,7 +8,14 @@ public class ErrorMessage implements Serializable {
 
     private String message;
 
+    public ErrorMessage() {
+    }
+
     public ErrorMessage(String message) {
+        this.message = message;
+    }
+
+    public void setMessage(String message) {
         this.message = message;
     }
 

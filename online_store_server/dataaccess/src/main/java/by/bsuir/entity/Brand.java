@@ -1,5 +1,8 @@
 package by.bsuir.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -14,15 +17,19 @@ public class Brand extends AbstractEntity {
     @Column(name = "description", length = 256)
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL,
+    @OneToMany(
+            cascade = {
+                    CascadeType.MERGE,
+                    CascadeType.PERSIST
+            },
             fetch = FetchType.LAZY,
             mappedBy = "brand")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Product> products = new HashSet<>();
 
 
     public Brand() {
     }
-
 
     public String getName() {
         return name;

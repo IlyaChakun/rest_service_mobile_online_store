@@ -1,7 +1,7 @@
 package by.bsuir.service;
 
-import by.bsuir.service.dto.OrderCreateDto;
-import by.bsuir.service.dto.OrderDto;
+import by.bsuir.service.dto.order.OrderCreateDto;
+import by.bsuir.service.dto.order.OrderDto;
 import by.bsuir.service.dto.PageWrapper;
 import by.bsuir.service.dto.Paging;
 

@@ -3,8 +3,7 @@ package by.bsuir.service;
 import by.bsuir.service.dto.PageWrapper;
 import by.bsuir.service.dto.Paging;
 import by.bsuir.service.dto.ProductDto;
-
-import java.util.List;
+import by.bsuir.service.dto.ProductSearchCriteriaDto;
 
 public interface ProductService {
 
@@ -16,11 +15,5 @@ public interface ProductService {
 
     ProductDto findById(Long id);
 
-    PageWrapper<ProductDto> findAll(Paging paging,
-                                    List<String> brands,
-                                    Double minPrice,
-                                    Double maxPrice,
-                                    String productName,
-                                    String sortBy,
-                                    String sortType);
+    PageWrapper<ProductDto> findAll(Paging paging, ProductSearchCriteriaDto productSearchCriteriaDto);
 }

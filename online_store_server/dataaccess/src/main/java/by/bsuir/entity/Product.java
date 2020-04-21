@@ -1,8 +1,11 @@
 package by.bsuir.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,26 +16,68 @@ public class Product extends AbstractEntity {
 
     @Column(name = "name", length = 64, nullable = false, unique = true)
     private String name;
+
     @Column(name = "description", length = 128)
     private String description;
+
     @Column(name = "price", nullable = false)
     private BigDecimal price;
+
     @Column(name = "date_of_creation", nullable = false)
-    private LocalDate dateOfCreation;
+    private LocalDateTime dateOfCreation;
+
     @Column(name = "date_of_modification", nullable = false)
-    private LocalDate dateOfModification;
+    private LocalDateTime dateOfModification;
+
     @Column(name = "count_available", nullable = false)
     private Integer countAvailable;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Brand brand;
-    @ManyToMany(mappedBy = "orderProducts", fetch = FetchType.LAZY)
-    private Set<Order> ordersWithProduct = new HashSet<>();
+
     @Column(name = "image_url", length = 900_000)
     private String imageUrl;
+
+    @Column(name = "release_year")
+    private Integer releaseYear;
+
+    @Column(name = "operation_system", length = 32)
+    private String operationSystem;
+
+    @Column(name = "screen_size", length = 32)
+    private String screenSize;
+
+    @Column(name = "screen_resolution", length = 32)
+    private String screenResolution;
+
+    @Column(name = "flash_memory", length = 32)
+    private String flashMemory;
+
+    @Column(name = "memory_cart_support")
+    private Boolean memoryCartSupport;
+
+    @Column(name = "dust_and_moisture_protection")
+    private Boolean dustAndMoistureProtection;
+
+    @ManyToMany(mappedBy = "orderProducts", fetch = FetchType.LAZY)
+    private Set<Order> ordersWithProduct = new HashSet<>();
+    @ManyToMany(mappedBy = "basketProducts", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<Basket> basketProducts = new HashSet<>();
 
     public Product() {
     }
 
+
+    @PrePersist
+    private void onCreate() {
+        dateOfModification = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        dateOfModification = LocalDateTime.now();
+    }
 
     public String getName() {
         return name;
@@ -66,19 +111,19 @@ public class Product extends AbstractEntity {
         this.brand = brand;
     }
 
-    public LocalDate getDateOfCreation() {
+    public LocalDateTime getDateOfCreation() {
         return dateOfCreation;
     }
 
-    public void setDateOfCreation(LocalDate dateOfCreation) {
+    public void setDateOfCreation(LocalDateTime dateOfCreation) {
         this.dateOfCreation = dateOfCreation;
     }
 
-    public LocalDate getDateOfModification() {
+    public LocalDateTime getDateOfModification() {
         return dateOfModification;
     }
 
-    public void setDateOfModification(LocalDate dateOfModification) {
+    public void setDateOfModification(LocalDateTime dateOfModification) {
         this.dateOfModification = dateOfModification;
     }
 
@@ -104,6 +149,70 @@ public class Product extends AbstractEntity {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Set<Basket> getBasketProducts() {
+        return basketProducts;
+    }
+
+    public void setBasketProducts(Set<Basket> basketProducts) {
+        this.basketProducts = basketProducts;
+    }
+
+    public Integer getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(Integer releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
+    public String getOperationSystem() {
+        return operationSystem;
+    }
+
+    public void setOperationSystem(String operatingSystem) {
+        this.operationSystem = operatingSystem;
+    }
+
+    public String getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(String screenSize) {
+        this.screenSize = screenSize;
+    }
+
+    public String getScreenResolution() {
+        return screenResolution;
+    }
+
+    public void setScreenResolution(String screenResolution) {
+        this.screenResolution = screenResolution;
+    }
+
+    public String getFlashMemory() {
+        return flashMemory;
+    }
+
+    public void setFlashMemory(String flashMemory) {
+        this.flashMemory = flashMemory;
+    }
+
+    public Boolean getMemoryCartSupport() {
+        return memoryCartSupport;
+    }
+
+    public void setMemoryCartSupport(Boolean memoryCartSupport) {
+        this.memoryCartSupport = memoryCartSupport;
+    }
+
+    public Boolean getDustAndMoistureProtection() {
+        return dustAndMoistureProtection;
+    }
+
+    public void setDustAndMoistureProtection(Boolean dustAndMoistureProtection) {
+        this.dustAndMoistureProtection = dustAndMoistureProtection;
     }
 
     @Override
