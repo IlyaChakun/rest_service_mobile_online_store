@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
 import './Profile.css';
+import {withRouter} from "react-router-dom";
 
 
 class Profile extends Component {
 
-    constructor(props) {
-        super(props);
-    }
-
-
 
     render() {
+
+
         return (
             <div className="profile-container">
                 <div className="base-container">
@@ -30,6 +28,7 @@ class Profile extends Component {
                             <h2>{this.props.currentUser.name}</h2>
                             <p className="profile-email">{this.props.currentUser.email}</p>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -37,4 +36,4 @@ class Profile extends Component {
     }
 }
 
-export default Profile;
+export default withRouter(Profile);

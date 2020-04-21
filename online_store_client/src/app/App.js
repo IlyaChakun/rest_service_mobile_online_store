@@ -24,6 +24,7 @@ import AddProduct from "../product/action/AddProduct";
 import EditProduct from "../product/action/EditProduct";
 import PrivateAdminRoute from "./util/PrivateAdminRoute";
 import Basket from "../product/basket/Basket";
+import BuyHistory from "../user/history/BuyHistory";
 
 
 const {Content} = Layout;
@@ -71,6 +72,8 @@ class App extends Component {
         });
         getCurrentUser()
             .then(response => {
+                console.log(response)
+
                 this.setState({
                     currentUser: response,
                     isAuthenticated: true,
@@ -128,8 +131,11 @@ class App extends Component {
     render() {
 
         console.log('base render works', this.state.isLoading);
+        console.log('base render works', this.state.currentUser);
 
-        if (this.state.isLoading) {
+        if (this.state.isLoading ||
+            this.state.currentUser === undefined ||
+            this.state.currentUser === null) {
             return <LoadingIndicator/>
         }
 
@@ -167,11 +173,15 @@ class App extends Component {
                                                component={EditProduct}
                                                handleLogout={this.handleLogout}/>
 
-
                             <PrivateRoute path="/profile"
                                           authenticated={this.state.isAuthenticated}
                                           currentUser={this.state.currentUser}
                                           component={Profile}/>
+
+                            <PrivateRoute path="/buy-history"
+                                          authenticated={this.state.isAuthenticated}
+                                          currentUser={this.state.currentUser}
+                                          component={BuyHistory}/>
 
                             <Route path="/user/:id/basket"
                                    authenticated={this.state.isAuthenticated}
@@ -253,5 +263,6 @@ export function isUser(currentUser) {
     }
     return false;
 }
+
 
 export default withRouter(App);

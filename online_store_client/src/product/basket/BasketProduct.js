@@ -62,7 +62,7 @@ class BasketProduct extends Component {
                              value={this.state.quantity}
                              type={'number'}
                              min={1}
-                             max={99}
+                             max={this.props.productWithQuantity.product.countAvailable}
                              formatter={this.customFormatter}
                              onChange={this.updateProductCount}
                 />
@@ -75,7 +75,6 @@ class BasketProduct extends Component {
 
 
         return (
-
 
             <div>
                 <ProductCart

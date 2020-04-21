@@ -217,7 +217,6 @@ class Basket extends PureComponent {
                 });
                 this.setBasketState();
             }).catch(error => {
-
             notification.error({
                 message: localizedStrings.alertAppName,
                 description: 'Не удалось удалить продукт из корзину!',
@@ -239,9 +238,10 @@ class Basket extends PureComponent {
             .then(() => {
                 this.setBasketState();
             }).catch(error => {
+
             notification.error({
                 message: localizedStrings.alertAppName,
-                description: 'Не удалось изменить колво в корзине!',
+                description: 'Не удалось изменить колво в корзине!Вы выбрали больше чем доступно!',
             });
         });
     };

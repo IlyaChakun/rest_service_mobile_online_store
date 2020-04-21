@@ -65,6 +65,22 @@ export function getAllProducts(searchCriteria) {
 
 }
 
+export function getAllUsersOrders(criteria) {
+
+    const page = 'page=' + Number(criteria.page !== 0 ? criteria.page - 1 : criteria.page);
+    const size = '&size=' + Number(criteria.size);
+
+    const url = API_BASE_URL +
+        "/users/" + criteria.userId + "/orders?" + page + size;
+
+    console.log('URL', url);
+
+    return request({
+        url: url,
+        method: 'GET'
+    });
+}
+
 export function getProductById(productId) {
     const url = API_BASE_URL + "/products/" + productId;
 

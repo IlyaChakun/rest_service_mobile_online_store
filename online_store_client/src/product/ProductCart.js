@@ -37,6 +37,24 @@ class ProductCart extends PureComponent {
             </div>
         </Tag>) : '';
 
+        const notAvailable = this.props.product.countAvailable === 0 ? (
+            <div style={{color: "red"}}>
+                Товар отсутствует на складе!
+            </div>
+        ) : '';
+
+        const productDescription = (
+            <span>
+                Год выпуска: {this.props.product.releaseYear};
+                Операционная система: {this.props.product.operationSystem};
+                Размер экрана: {this.props.product.screenSize};
+                Разрешение экрана: {this.props.product.screenResolution};
+                Память: {this.props.product.flashMemory};
+                Поддержка флешки: {this.props.product.memoryCartSupport === true ? 'Да' : 'Нет'};
+                Защита от пыли и влаги: {this.props.product.dustAndMoistureProtection === true ? 'Да' : 'Нет'};
+            </span>
+        );
+
         return (
 
             <div>
@@ -52,12 +70,16 @@ class ProductCart extends PureComponent {
                     title={
                         <span>
                                {this.props.product.brand.name} {this.props.product.name}
+                            <p>
+                                   {notAvailable}
+                               </p>
                         </span>
                     }
                     actions={[
                         this.props.firstAction,
                         this.props.secondAction,
-                        this.props.thirdAction
+
+                        this.props.product.countAvailable > 0 ? this.props.thirdAction : ''
                     ]}>
 
                     <Meta
@@ -77,7 +99,9 @@ class ProductCart extends PureComponent {
                             <div>
                                 <div className="product-content-body">
                                     {this.props.product.description}
-                                    any description
+                                    <p>
+                                        {productDescription}
+                                    </p>
                                 </div>
 
 

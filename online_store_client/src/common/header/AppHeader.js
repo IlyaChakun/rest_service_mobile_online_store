@@ -103,7 +103,6 @@ class AppHeader extends PureComponent {
         console.log('this.state.curUser', this.state.currentUser)
 
         return (
-
             <Header className="app-header">
                 <div className="base-container">
                     <div className="app-title">
@@ -166,6 +165,11 @@ function ProfileDropdownMenu(props) {
             <Menu.Item key="profile" className="dropdown-item">
                 <Link to="/profile">
                     {localizedStrings.profile}
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="buy-history" className="dropdown-item">
+                <Link to="/buy-history">
+                    История покупок
                 </Link>
             </Menu.Item>
             <Menu.Item key="logout" className="dropdown-item">

@@ -18,4 +18,4 @@ const PrivateAdminRoute = ({component: Component, authenticated, currentUser, ..
     />
 );
 
-export default PrivateAdminRoute
+export default PrivateAdminRoute;

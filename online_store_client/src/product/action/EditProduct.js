@@ -48,7 +48,15 @@ class EditProduct extends PureComponent {
                             value: response.countAvailable,
                             validateStatus: 'success'
                         },
-                        imageUrl: response.imageUrl
+                        imageUrl: response.imageUrl,
+
+                        releaseYear: response.releaseYear,
+                        operationSystem: response.operationSystem,
+                        screenSize: response.screenSize,
+                        screenResolution: response.screenResolution,
+                        flashMemory: response.flashMemory,
+                        memoryCartSupport: response.memoryCartSupport,
+                        dustAndMoistureProtection: response.dustAndMoistureProtection
                     }
                 });
             })

@@ -17,8 +17,8 @@ export const localizedStrings = new LocalizedStrings({
             logout: "Logout",
             login: "Login",
             signUp: "Sign up",
-            certificates: "Certificates",
-            shopName: "Certificates shop",
+            certificates: "Mobiles",
+            shopName: "Mobiles shop",
             logInWithGoogle: "Log in with Google",
             logInWithGithub: "Log in with github",
             loginFormRegisterNow: " register now!",
@@ -28,7 +28,7 @@ export const localizedStrings = new LocalizedStrings({
             email: "email",
             password: "Password",
             loginField: "Login",
-            editCertificate: 'Update certificate',
+            editCertificate: 'Update mobile',
 
 
             sort: 'Sort: ',
@@ -37,7 +37,7 @@ export const localizedStrings = new LocalizedStrings({
 
 
             //certificate
-            certificateName: "Certificate name",
+            certificateName: "Mobile name",
             description: "Description",
             price: "Price",
             expirationPeriod: "Expiration period",
@@ -45,7 +45,7 @@ export const localizedStrings = new LocalizedStrings({
             tag: "Tag",
             //
             profile: "Profile",
-            addCertificate: "Add Certificate",
+            addCertificate: "Add mobile",
 
 
             ///params
@@ -81,12 +81,12 @@ export const localizedStrings = new LocalizedStrings({
             alertOrderCreated: 'Order created! Thanks!',
 
 
-            alertDeleteCertificateSuccessfully: 'Certificate deleted successfully!',
-            alertEditCertificateSuccessfully: 'Certificate edited successfully!',
-            alertAddCertificateSuccessfully: 'Certificate added successfully!',
+            alertDeleteCertificateSuccessfully: 'Mobile deleted successfully!',
+            alertEditCertificateSuccessfully: 'Mobile edited successfully!',
+            alertAddCertificateSuccessfully: 'Mobile added successfully!',
             alertEmptyEmail: 'Email may not be empty',
 
-            alertAppName: 'Certificate App',
+            alertAppName: 'Mobile App',
             alertLoggedOut: 'You have been logged out. Please login create certificate.',
 
 
@@ -103,12 +103,12 @@ export const localizedStrings = new LocalizedStrings({
             ///helpers
             helpForPass: "A password between 6 to 20 characters",
             helpForEmail: "Your email",
-            helpForCertificateName: "Enter certificate name",
-            helpForCertificateDescription: "Enter certificate description",
-            helpForCertificatePrice: "Enter certificate price",
+            helpForCertificateName: "Enter name",
+            helpForCertificateDescription: "Enter description",
+            helpForCertificatePrice: "Enter price",
             helpSearch: "Search...",
 
-            helpDeleteModal: "Do you want to delete certificate?",
+            helpDeleteModal: "Do you want to delete mobile?",
             helpCancel: "Cancel",
             helpOk: "Ok",
 
@@ -126,7 +126,7 @@ export const localizedStrings = new LocalizedStrings({
             addTag: "Add a tag",
             search: "Search",
             selectShowAllCertificates: "All",
-            selectShowMyCertificates: "My certificates",
+            selectShowMyCertificates: "My purchases",
             goBack: 'Go back',
 
             //months
@@ -148,8 +148,8 @@ export const localizedStrings = new LocalizedStrings({
             logout: "Выйти",
             login: "Войти",
             signUp: "Регистрация",
-            certificates: "Сертификаты",
-            shopName: "Магазин сертификатов",
+            certificates: "Телефоны",
+            shopName: "Магазин телефонов",
             logInWithGoogle: "Войти через Google",
             logInWithGithub: "Войти через github",
             alreadyRegister: "Уже зарегистрированы?",
@@ -159,7 +159,7 @@ export const localizedStrings = new LocalizedStrings({
             email: "Электронная почта",
             password: "Пароль",
             loginField: "Логин",
-            editCertificate: 'Изменить сертификат',
+            editCertificate: 'Изменить товар',
 
 
             sort: 'Сортировать: ',
@@ -168,7 +168,7 @@ export const localizedStrings = new LocalizedStrings({
 
 
             //certificate
-            certificateName: "Название сертификата",
+            certificateName: "Название ",
             description: "Описание",
             price: "Цена",
             expirationPeriod: "Срок действия сертификата",
@@ -177,7 +177,7 @@ export const localizedStrings = new LocalizedStrings({
             //
 
             profile: "Профиль",
-            addCertificate: "Добавить сертификат",
+            addCertificate: "Добавить товар",
 
             ///params
             name: "Имя",
@@ -214,11 +214,11 @@ export const localizedStrings = new LocalizedStrings({
             alertOrderCreated: 'Заказ принят! Спасибо',
             alertEmptyEmail: 'Email не может быть пустым',
 
-            alertDeleteCertificateSuccessfully: 'Сертификат удален успешно!',
-            alertEditCertificateSuccessfully: 'Сертификат изменен успешно!',
-            alertAddCertificateSuccessfully: 'Сертификат добавлен успешно!',
+            alertDeleteCertificateSuccessfully: 'Телефон удален успешно!',
+            alertEditCertificateSuccessfully: 'Телефон изменен успешно!',
+            alertAddCertificateSuccessfully: 'Телефон добавлен успешно!',
 
-            alertAppName: 'Магазин сертификатов',
+            alertAppName: 'Магазин телефонов',
             alertLoggedOut: 'Вы вышли из системы. Пожалуйста, залогиньтесь для этого действия.',
 
             alertWrongEmailOrPassword: 'Ваш логин или пароль неверны. Пожалуйста, попробуйте еще раз!',
@@ -232,12 +232,12 @@ export const localizedStrings = new LocalizedStrings({
             ///helpers
             helpForPass: "Пароль должен быть от 6 до 20 символов",
             helpForEmail: "Ваша электронная почта",
-            helpForCertificateName: "Введите название сертификата",
-            helpForCertificateDescription: "Введите описание сертификата",
-            helpForCertificatePrice: "Введите стоимость сертификата",
+            helpForCertificateName: "Введите название телефона",
+            helpForCertificateDescription: "Введите описание телефона",
+            helpForCertificatePrice: "Введите стоимость телефона",
             helpSearch: "Поиск...",
 
-            helpDeleteModal: "Вы действительно хотите удалить сертификат?",
+            helpDeleteModal: "Вы действительно хотите удалить телефон?",
             helpCancel: "Закрыть",
             helpOk: "Потдвердить",
 
@@ -260,7 +260,7 @@ export const localizedStrings = new LocalizedStrings({
 
             search: "Поиск",
             selectShowAllCertificates: "Всё",
-            selectShowMyCertificates: "Мои сертификаты",
+            selectShowMyCertificates: "Мои покупки",
             goBack: 'Назад',
             //months
             january: "Январь",
