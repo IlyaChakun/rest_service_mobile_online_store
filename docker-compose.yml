@@ -1,0 +1,56 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+
+version: '3.7'
+
+# Define services
+services:
+  # App backend service
+  app-server:
+    # Configuration for building the docker image for the backend service
+    build:
+      context: online_store_server # Use an image built from the specified dockerfile in the `online_store_server` directory.
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    restart: always # Tell to container to restart every time it fails
+    depends_on: 
+      - dbpostgres # This service depends on postgresql. Start that first.
+    environment: # Pass environment variables to the service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgres:5432/mydb # giving url to datasourse
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password     
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - backend
+      - frontend
+
+  # Frontend Service 
+  app-client:
+    build:
+      context: online_store_client # Use an image built from the specified dockerfile in the `online_store_client` directory.
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80" # Map the exposed port 80 on the container to port 3000 on the host machine
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - frontend  
+
+  # Database Service (POSTGRESQL)
+  dbpostgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydb
+    networks:
+      - backend  
+  
+
+# Networks to be created to facilitate communication between containers
+networks:
+  backend:
+  frontend:    

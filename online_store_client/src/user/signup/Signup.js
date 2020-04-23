@@ -269,7 +269,7 @@ class Signup extends Component {
         if (email.length > EMAIL_MAX_LENGTH) {
             return {
                 validateStatus: ERROR,
-                errorMsg: alertEmailToLong
+                errorMsg: "Мыло слишком длинное!"
             }
         }
 

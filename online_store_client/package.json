@@ -1,9 +1,11 @@
 {
-  "name": "react-social",
+  "name": "react",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --open --config wp/webpack.dev.config.js"
+    "dev": "webpack-dev-server --open --config wp/webpack.dev.config.js",
+    "build": "react-app-rewired build",
+    "start": "react-app-rewired start"
   },
   "dependencies": {
     "@babel/cli": "^7.6.4",

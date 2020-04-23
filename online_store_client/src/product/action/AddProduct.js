@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import ProductForm from "./ProductForm";
-import './ProductLogic.css';
+import './ProductForm.css';
 import {createProduct} from "../../util/APIUtils";
 
 import {localizedStrings} from "../../util/Localization";
@@ -33,7 +33,15 @@ class AddProduct extends PureComponent {
                     value: '',
                     validateStatus: ''
                 },
-                imageUrl: null
+                imageUrl: null,
+
+                releaseYear: 2020,
+                operationSystem: null,
+                screenSize: null,
+                screenResolution: null,
+                flashMemory: null,
+                memoryCartSupport: false,
+                dustAndMoistureProtection: false,
             }
         };
     }
@@ -55,7 +63,7 @@ class AddProduct extends PureComponent {
                 } else {
                     notification.error({
                         message: localizedStrings.alertAppName,
-                        description: localizedStrings.alertException
+                        description: localizedStrings.alertException + error + error.message
                     });
                 }
             });
@@ -65,12 +73,12 @@ class AddProduct extends PureComponent {
     render() {
 
         return (
-            <div>
+            <div className="add-product-container">
                 <h1 className="page-title">
                     Добавить новый продукт
                 </h1>
 
-                <div>
+                <div className="base-container">
                     <ProductForm
                         product={this.state.product}
                         action={'Добавить'}

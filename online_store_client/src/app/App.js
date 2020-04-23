@@ -132,12 +132,12 @@ class App extends Component {
 
         console.log('base render works', this.state.isLoading);
         console.log('base render works', this.state.currentUser);
-
-        if (this.state.isLoading ||
-            this.state.currentUser === undefined ||
-            this.state.currentUser === null) {
-            return <LoadingIndicator/>
-        }
+        //
+        // if (this.state.isLoading ||
+        //     this.state.currentUser === undefined ||
+        //     this.state.currentUser === null) {
+        //     return <LoadingIndicator/>
+        // }
 
 
         return (
